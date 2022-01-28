@@ -67,6 +67,7 @@ app.post('/api/users/login', (req, res) => {
     })  
 })
 
+//auth 기능
 app.get('/api/users/auth', auth, (req,res) => {
     //미들웨어가 통과했다면, Authentication이 True
     res.status(200).json({
@@ -81,6 +82,17 @@ app.get('/api/users/auth', auth, (req,res) => {
     })
 })
 
+//로그아웃 기능
+app.get('/api/users/logout', auth, (req,res) => {
+    User.findOneAndUpdate({ _id: req.user._id },
+        { token: "" }
+        , (err, user) => {
+            if(err) return res.json({ success: false, err});
+            return res.status(200).send({
+                success: true
+            })
+        })
+})
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`)
 })
